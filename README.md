@@ -1,50 +1,14 @@
-# React + TypeScript + Vite
+# TutorFinder237
+TutorFinder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+TutorFinder is an innovative platform that bridges the gap between students, parents, and freelance tutors. The application enables users to search for and connect with qualified tutors across various subjects and levels.
 
-Currently, two official plugins are available:
+Our mission is to make personalized education accessible to everyone by providing a seamless way to find, book, and collaborate with tutors. Whether you’re a parent seeking help for your child or a student looking to improve in a specific area, TutorFinder is here to support your learning journey.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Key Highlights
 
-## Expanding the ESLint configuration
+📚 Personalized Learning: Tailored tutoring sessions to meet individual needs.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+🌍 Global Reach: Access to tutors worldwide or within your local area (Cameroon) .
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+🔒 Secure Platform: Built-in messaging and secure booking for a hassle-free experience (future) .
