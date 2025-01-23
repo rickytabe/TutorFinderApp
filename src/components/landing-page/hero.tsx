@@ -7,7 +7,6 @@ const HeroSection = () => {
       {/* Animated Grid Background */}
       <div className="absolute inset-0 z-0">
         <Squares
-          speed={0.15}
           squareSize={50}
           direction="diagonal"
           borderColor="rgba(255,255,255,0.15)"
