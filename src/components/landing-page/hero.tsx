@@ -6,10 +6,7 @@ const HeroSection = () => {
     <section className="relative bg-black text-white min-h-[80vh] flex items-center justify-center">
       {/* Animated Grid Background */}
       <div className="absolute inset-0 z-0">
-        <Squares
-          squareSize={50}
-          direction="diagonal"
-          borderColor="rgba(255,255,255,0.15)"
+        <Squares borderColor="rgba(255,255,255,0.15)"
           hoverFillColor="#222"
         />
       </div>
