@@ -17,7 +17,7 @@ const Navbar = () => {
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           {/* LoGo */}
           <div className="text-2xl font-bold italic">
-            Tutor <span className="font-serif text-blue-600">Finder </span>
+            Tutor <span className="text-blue-600">Finder </span>
           </div>
           {/* Links for large screens*/}
           <ul className="hidden md:flex space-x-6 mr-20">
@@ -36,7 +36,7 @@ const Navbar = () => {
                 viewBox="0 0 24 24"
                 strokeWidth="2"
                 stroke="currentColor"
-                className="w-6 h-6 text-gray-800"
+                className="w-6 h-6 text-white"
               >
                 <path
                   strokeLinecap="round"

@@ -1,11 +1,12 @@
-import Navbar from "./components/navbar";
-import AnimateText from "./components/animation";
+// import Navbar from "./components/navbar";
+// import AnimateText from "./components/animation";
+import LandingPage from "./components/landing-page/landing-page";
+
 
 function App() {
   return (
-    <div className="bg-black min-h-screen">
-      <Navbar />
-      <AnimateText />
+    <div>
+      <LandingPage />
     </div>
   );
 }
