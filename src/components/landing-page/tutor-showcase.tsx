@@ -58,7 +58,7 @@ const TutorShowcase = () => {
              >
               {/* Availability Badge */}
               <div
-                className={`absolute top-4 right-4 px-3 py-1 rounded-full text-sm ${
+                className={`absolute top-4 right-4 px-3 py-1  rounded-full text-sm ${
                   tutor.available
                     ? "bg-green-900/30 text-green-400"
                     : "bg-red-900/30 text-red-400"
@@ -67,7 +67,7 @@ const TutorShowcase = () => {
                 {tutor.available ? "Available Now" : "Fully Booked"}
               </div>
 
-              <div className="flex items-center mb-6">
+              <div className="flex items-center mb-6 mt-10 md:mt-0">
                 <div className="w-20 h-20 rounded-full bg-blue-900/50 flex items-center justify-center text-4xl mr-4">
                   {tutor.image}
                 </div>
