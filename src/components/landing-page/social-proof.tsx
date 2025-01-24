@@ -16,8 +16,8 @@ const SocialProof = () => {
   ];
 
   const achievements = [
-    { number: "25,000+", label: "Active Students" }, // Added active students
-    { number: "10,000+", label: "Hours Taught" },
+    { number: "25K+", label: "Active Students" }, // Added active students
+    { number: "10K+", label: "Hours Taught" },
     { number: "4.9/5", label: "Average Rating" },
     { number: "98%", label: "Success Rate" }
   ];
@@ -30,7 +30,7 @@ const sponsors = ['SkillUp', 'CodeCamp','MathMaster', 'EduTech']
         {/* Achievement Metrics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16"> {/* Changed to 4 columns */}
           {achievements.map((item, index) => (
-            <div key={index} className="text-center p-10 bg-white rounded-xl shadow-sm border-2 border-grey-500 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500">
+            <div key={index} className="text-center p-4 md:p-10 bg-white rounded-xl shadow-sm border-2 border-grey-500 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500">
               <div className="text-3xl md:text-4xl font-bold text-white mb-2">
                 {item.number}
               </div>
