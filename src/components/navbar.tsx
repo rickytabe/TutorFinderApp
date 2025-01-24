@@ -54,7 +54,7 @@ const Navbar = () => {
     <div
         className={`fixed top-0 right-0 h-full w-64 bg-white  shadow-lg transform ${
           isSidebarOpen ? "translate-x-0" : "translate-x-full"
-        } transition-transform duration-300 ease-in-out z-40`}
+        } fixed top-0 right-0 h-full w-64 bg-white  shadow-lg transform`}
       >
         <button
           className="p-2 absolute top-4 right-4 text-gray-700"
