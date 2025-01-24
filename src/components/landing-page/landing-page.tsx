@@ -3,6 +3,9 @@ import NavBar from "./navbar";
 import AnimateText from '../animation'
 import SocialProof from "./social-proof";
 import ValueGrid from "./value-proposition";
+import TutorShowcase from "./tutor-showcase";
+import TrendingSkills from "./trending-skill";
+
 
 const LandingPage = ()=>{
   
@@ -12,6 +15,8 @@ const LandingPage = ()=>{
             <HeroSection />
             <SocialProof />
             <ValueGrid />
+            <TutorShowcase />
+            <TrendingSkills />
             <AnimateText />
         </div>
     )
