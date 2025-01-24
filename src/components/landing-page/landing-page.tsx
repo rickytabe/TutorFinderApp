@@ -5,6 +5,8 @@ import SocialProof from "./social-proof";
 import ValueGrid from "./value-proposition";
 import TutorShowcase from "./tutor-showcase";
 import TrendingSkills from "./trending-skill";
+import HowItWorks from "./how-it-works";
+import PricingTransparency from "./pricing";
 
 
 const LandingPage = ()=>{
@@ -17,6 +19,8 @@ const LandingPage = ()=>{
             <ValueGrid />
             <TutorShowcase />
             <TrendingSkills />
+            <HowItWorks />
+            <PricingTransparency />
             <AnimateText />
         </div>
     )
