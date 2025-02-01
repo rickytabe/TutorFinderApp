@@ -13,22 +13,22 @@ const MobileAppCTA = () => {
   };
 
   return (
-    <section className="py-16 bg-gray-100">
+    <section className="py-16 bg-gray-900">
       <div className="container mx-auto px-4 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
           Learn On The Go
         </h2>
-        <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+        <p className="text-gray-100 mb-8 max-w-2xl mx-auto">
           Access expert tutors and track your progress from anywhere with our mobile app
         </p>
 
         <div className="flex justify-center space-x-4 mb-12">
           <button
             onClick={() => setShowModal(true)}
-            className="flex items-center bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+            className="flex items-center bg-white text-gray-900 px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
           >
             <img 
-              src="https://cdn.worldvectorlogo.com/logos/google-play-icon.svg" 
+              src="https://i.pinimg.com/736x/2f/32/1d/2f321d5a70bfb8875db20a7c552f62fa.jpg" 
               alt="Google Play" 
               className="w-6 h-6 mr-2"
             />
@@ -37,10 +37,10 @@ const MobileAppCTA = () => {
           
           <button
             onClick={() => setShowModal(true)}
-            className="flex items-center bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+            className="flex items-center bg-white text-gray-900 px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
           >
             <img
-              src="https://cdn.worldvectorlogo.com/logos/apple-app-store.svg"
+              src="https://i.pinimg.com/236x/46/da/02/46da027e347d0f8a21a9589aee4d243c.jpg"
               alt="App Store"
               className="w-6 h-6 mr-2"
             />
@@ -50,7 +50,7 @@ const MobileAppCTA = () => {
 
         {showModal && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
+            <div className="bg-gray-900 rounded-2xl p-8 max-w-md w-full mx-4">
               <button
                 onClick={() => setShowModal(false)}
                 className="float-right text-gray-500 hover:text-gray-700 text-2xl"
@@ -75,11 +75,11 @@ const MobileAppCTA = () => {
                   </svg>
                 </div>
 
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                <h3 className="text-2xl font-bold text-white mb-4">
                   Mobile App Coming Soon!
                 </h3>
                 
-                <p className="text-gray-600 mb-6">
+                <p className="text-gray-100 mb-6">
                   We're working hard to bring you the best mobile learning experience. 
                   Be the first to know when we launch!
                 </p>

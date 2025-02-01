@@ -51,8 +51,8 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
     "fixed top-0 left-0 w-full text-white z-30 transition-all duration-300 bg-black/80 backdrop-blur-sm shadow-lg";
   const logoStyles = "text-3xl font-bold italic";
   const navBarButtonStyles = (isActive: boolean) =>
-    `hover:bg-black rounded-md p-2 cursor-pointer border-b-2 border-gray-200 ${
-      isActive ? "text-blue-500" : "text-black hover:text-white"
+    `hover:bg-white rounded-md p-2 cursor-pointer border-b-2 border-gray-200 ${
+      isActive ? "text-blue-500" : "text-white hover:text-black"
     }`;
 
   // Navigation links
@@ -68,7 +68,7 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
     { name: "Mobile App", path: "mobile-app" },
     { name: "FAQ", path: "faq" },
     { name: "Contact", path: "contact" },
-    { name: "Footer", path: "footer" }, // Added
+    { name: "Quick Links", path: "footer" }, // Added
   ];
 
   const visibleLinks = allLinks.slice(0, 5);
@@ -96,7 +96,7 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           {/* Logo */}
           <div className={logoStyles}>
-            Tut <span className="text-blue-600">Finder</span>
+            Tutor <span className="text-blue-600">Finder</span>
           </div>
 
           {/* Desktop Navigation */}
@@ -123,18 +123,39 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
                 <li className="relative">
                   <button
                     onClick={() => setIsMoreOpen(!isMoreOpen)}
-                    className={linkStyles(moreLinks.some(link => activeSection === link.path))}
+                    className={linkStyles(
+                      moreLinks.some((link) => activeSection === link.path)
+                    )}
                     aria-label="Show more links"
                   >
-                    More
+                    <div className="flex justify-between">
+                      More
+                      <svg
+                        className={`w-6 h-6  transform transition-transform ${
+                          isMoreOpen ? "rotate-180" : ""
+                        }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </div>
                     <span
-                      className={underlineStyles(moreLinks.some(link => activeSection === link.path))}
+                      className={underlineStyles(
+                        moreLinks.some((link) => activeSection === link.path)
+                      )}
                       aria-hidden="true"
                     ></span>
                   </button>
 
                   {isMoreOpen && (
-                    <div className="absolute right-0 mt-2 w-48 rounded-lg shadow-lg bg-white/10 backdrop-blur-md border border-gray-200">
+                    <div className="absolute right-0 mt-2 w-48 rounded-lg shadow-lg bg-black/90 backdrop-blur-md border border-gray-200">
                       <ul className="py-2">
                         {moreLinks.map((link) => (
                           <li key={link.name}>
@@ -144,7 +165,9 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
                                 setIsMoreOpen(false);
                               }}
                               className={`block w-full px-4 py-2 hover:bg-white/20 text-left ${
-                                activeSection === link.path ? "text-blue-500" : "text-white"
+                                activeSection === link.path
+                                  ? "text-blue-500"
+                                  : "text-white"
                               }`}
                             >
                               {link.name}
@@ -202,30 +225,37 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
 
       {/* Mobile Sidebar */}
       <div
-        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform ${
+        className={`fixed top-0 right-0 h-full w-[99vw] bg-black/20  overflow-y-scroll pb-10 shadow-lg transform ${
           isMenuOpen ? "translate-x-0" : "translate-x-full"
         } transition-transform duration-300 z-40`}
       >
-        <button
-          className="p-2 absolute top-4 right-4 text-gray-700"
-          onClick={toggleMenu}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="2"
-            stroke="currentColor"
-            className="w-6 h-6"
+        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+          {/* Logo */}
+          <div className='text-3xl font-bold italic text-white'>
+            Tutor <span className="text-blue-600">Finder</span>
+          </div>
+
+          <button
+            className="p-2 absolute top-4 right-4 text-white"
+            onClick={toggleMenu}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-        <ul className="mt-16 space-y-4 text-black px-6 border-b border-gray-700 pb-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+        <ul className="mt-16 space-y-4 text-green-100 px-6 border-b border-gray-700 pb-4">
           {allLinks.map((link) => (
             <li
               key={link.name}
@@ -245,7 +275,7 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
       {/* Overlay with blur effect */}
       {isMenuOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-30"
+          className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-lg z-30"
           onClick={toggleMenu}
         ></div>
       )}
