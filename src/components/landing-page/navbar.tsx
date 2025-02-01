@@ -37,7 +37,7 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
       isActive ? "text-blue-500" : "text-white hover:text-blue-600"
     }`;
   const underlineStyles = (isActive: boolean) =>
-    `absolute left-0 bottom-0 h-0.5 bg-white transition-all duration-300 ${
+    `absolute left-0 bottom-0 h-0.5 bg-blue-500 transition-all duration-300 ${
       isActive ? "w-full" : "w-0 group-hover:w-full"
     }`;
   const menuContainerStyles =
@@ -96,7 +96,7 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           {/* Logo */}
           <div className={logoStyles}>
-            Tutor <span className="text-blue-600">Finder</span>
+            Tut <span className="text-blue-600">Finder</span>
           </div>
 
           {/* Desktop Navigation */}

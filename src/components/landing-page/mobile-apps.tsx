@@ -1,310 +1,112 @@
-import { useEffect, useState, useCallback } from "react";
+import { useState } from "react";
 
-interface NavLink {
-  name: string;
-  path: string;
-}
+const MobileAppCTA = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [email, setEmail] = useState("");
 
-interface NavBarProps {
-  scrollToSection: (sectionId: string) => void;
-  activeSection: string | null;
-}
-
-const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
-  // State variables
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMoreOpen, setIsMoreOpen] = useState(false);
-  const [isMobileMoreOpen, setIsMobileMoreOpen] = useState(false); // <-- For mobile sidebar "More" toggle
-
-  // Handle body overflow when menu is open
-  useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = "hidden";
-      document.body.style.touchAction = "none";
-    } else {
-      document.body.style.overflow = "";
-      document.body.style.touchAction = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-      document.body.style.touchAction = "";
-    };
-  }, [isMenuOpen]);
-
-  // Style variables
-  const linkStyles = (isActive: boolean) =>
-    `inline-block px-4 py-1 transition-all duration-300 relative group ${
-      isActive ? "text-blue-500" : "text-white hover:text-blue-600"
-    }`;
-  const underlineStyles = (isActive: boolean) =>
-    `absolute left-0 bottom-0 h-0.5 bg-blue-500 transition-all duration-300 ${
-      isActive ? "w-full" : "w-0 group-hover:w-full"
-    }`;
-  const menuContainerStyles =
-    "hidden md:block backdrop-blur-md bg-white/10 p-4 border-gray-200 border rounded-lg";
-  const buttonBaseStyles = "px-6 py-2 text-sm font-medium";
-  const signupButtonStyles = `${buttonBaseStyles} text-white bg-blue-600 rounded hover:bg-blue-700`;
-  const loginButtonStyles = `${buttonBaseStyles} text-blue-600 border border-blue-600 rounded hover:bg-blue-100 hover:border-blue-700`;
-  const mobileMenuButtonStyles =
-    "md:hidden p-2 text-white hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500";
-  const navContainerStyles =
-    "fixed top-0 left-0 w-full text-white z-30 transition-all duration-300 bg-black/80 backdrop-blur-sm shadow-lg";
-  const logoStyles = "text-3xl font-bold italic";
-  const navBarButtonStyles = (isActive: boolean) =>
-    `hover:bg-black rounded-md p-2 cursor-pointer border-b-2 border-gray-200 ${
-      isActive ? "text-blue-500" : "text-black hover:text-white"
-    }`;
-
-  // All navigation links
-  const allLinks: NavLink[] = [
-    { name: "Home", path: "home" },
-    { name: "Social Proof", path: "social-proof" },
-    { name: "Find a Tutor", path: "tutors" },
-    { name: "Trending Skills", path: "trending-skills" }, // Added
-    { name: "How It Works", path: "how-it-works" },
-    { name: "Pricing", path: "pricing" },
-    { name: "Success Stories", path: "success-stories" },
-    { name: "Trust & Security", path: "trust-security" },
-    { name: "Mobile App", path: "mobile-app" },
-    { name: "FAQ", path: "faq" },
-    { name: "Contact", path: "contact" },
-    { name: "Footer", path: "footer" }, // Added
-  ];
-
-  // For desktop navigation: visible first 5 and "more" links
-  const visibleLinks = allLinks.slice(0, 5);
-  const moreLinks = allLinks.slice(5);
-
-  // For mobile sidebar: limit to 5 options then add a "More" option
-  const mobileVisibleLinks = allLinks.slice(0, 5);
-  const mobileMoreLinks = allLinks.slice(5);
-
-  // Mobile menu toggle
-  const toggleMenu = useCallback(() => {
-    setIsMenuOpen((prev) => !prev);
-  }, []);
-
-  // Handle link click (both desktop and mobile)
-  const handleLinkClick = (path: string) => {
-    scrollToSection(path);
-    setIsMenuOpen(false);
-    // Close any open "More" dropdowns
-    setIsMoreOpen(false);
-    setIsMobileMoreOpen(false);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Add your email collection logic here
+    console.log("Email submitted:", email);
+    setShowModal(false);
+    setEmail("");
   };
 
   return (
-    <div>
-      <nav
-        className={navContainerStyles}
-        aria-label="Main navigation"
-        aria-expanded={isMenuOpen}
-      >
-        {/* Main nav bar */}
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          {/* Logo */}
-          <div className={logoStyles}>
-            Tutor <span className="text-blue-600">Finder</span>
-          </div>
+    <section className="py-16 bg-gray-100">
+      <div className="container mx-auto px-4 text-center">
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          Learn On The Go
+        </h2>
+        <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+          Access expert tutors and track your progress from anywhere with our mobile app
+        </p>
 
-          {/* Desktop Navigation */}
-          <div className={menuContainerStyles}>
-            <ul className="flex space-x-4 items-center">
-              {visibleLinks.map((link) => (
-                <li key={link.name}>
-                  <button
-                    onClick={() => handleLinkClick(link.path)}
-                    className={linkStyles(activeSection === link.path)}
-                    aria-label={`Navigate to ${link.name}`}
-                  >
-                    {link.name}
-                    <span
-                      className={underlineStyles(activeSection === link.path)}
-                      aria-hidden="true"
-                    ></span>
-                  </button>
-                </li>
-              ))}
-
-              {/* More dropdown for desktop */}
-              {moreLinks.length > 0 && (
-                <li className="relative">
-                  <button
-                    onClick={() => setIsMoreOpen(!isMoreOpen)}
-                    className={linkStyles(moreLinks.some(link => activeSection === link.path))}
-                    aria-label="Show more links"
-                  >
-                    More
-                    {/* Arrow icon that rotates when isMoreOpen is true */}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="2"
-                      stroke="currentColor"
-                      className={`inline-block ml-1 w-4 h-4 transition-transform duration-300 ${
-                        isMoreOpen ? "rotate-180" : "rotate-0"
-                      }`}
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                    <span
-                      className={underlineStyles(moreLinks.some(link => activeSection === link.path))}
-                      aria-hidden="true"
-                    ></span>
-                  </button>
-
-                  {isMoreOpen && (
-                    <div className="absolute right-0 mt-2 w-48 rounded-lg shadow-lg bg-black/90 backdrop-blur-md border border-gray-200">
-                      <ul className="py-2">
-                        {moreLinks.map((link) => (
-                          <li key={link.name}>
-                            <button
-                              onClick={() => {
-                                handleLinkClick(link.path);
-                                setIsMoreOpen(false);
-                              }}
-                              className={`block w-full px-4 py-2 hover:bg-white/20 text-left ${
-                                activeSection === link.path ? "text-blue-500" : "text-white"
-                              }`}
-                            >
-                              {link.name}
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </li>
-              )}
-            </ul>
-          </div>
-
-          {/* Auth Buttons */}
-          <div className="hidden md:flex space-x-4">
-            <button
-              className={signupButtonStyles}
-              aria-label="Create a new account"
-            >
-              Sign Up
-            </button>
-            <button
-              className={loginButtonStyles}
-              aria-label="Login to your account"
-            >
-              Login
-            </button>
-          </div>
-
-          {/* Mobile Menu icon */}
+        <div className="flex justify-center space-x-4 mb-12">
           <button
-            className={mobileMenuButtonStyles}
-            onClick={toggleMenu}
-            aria-label="Toggle navigation menu"
-            aria-expanded={isMenuOpen}
+            onClick={() => setShowModal(true)}
+            className="flex items-center bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="2"
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
-            </svg>
+            <img 
+              src="https://cdn.worldvectorlogo.com/logos/google-play-icon.svg" 
+              alt="Google Play" 
+              className="w-6 h-6 mr-2"
+            />
+            Google Play
+          </button>
+          
+          <button
+            onClick={() => setShowModal(true)}
+            className="flex items-center bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+          >
+            <img
+              src="https://cdn.worldvectorlogo.com/logos/apple-app-store.svg"
+              alt="App Store"
+              className="w-6 h-6 mr-2"
+            />
+            App Store
           </button>
         </div>
-      </nav>
 
-      {/* Mobile Sidebar */}
-      <div
-        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform ${
-          isMenuOpen ? "translate-x-0" : "translate-x-full"
-        } transition-transform duration-300 z-40`}
-      >
-        <button
-          className="p-2 absolute top-4 right-4 text-gray-700"
-          onClick={toggleMenu}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="2"
-            stroke="currentColor"
-            className="w-6 h-6"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-        {/* Added horizontal scrolling to the sidebar list */}
-        <ul className="mt-16 space-y-4 text-black px-6 border-b border-gray-700 pb-4 overflow-x-auto">
-          {mobileVisibleLinks.map((link) => (
-            <li
-              key={link.name}
-              className={navBarButtonStyles(activeSection === link.path)}
-              onClick={() => handleLinkClick(link.path)}
-            >
-              {link.name}
-            </li>
-          ))}
-
-          {/* Mobile sidebar "More" option */}
-          {mobileMoreLinks.length > 0 && (
-            <li className="relative">
+        {showModal && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
               <button
-                onClick={() => setIsMobileMoreOpen(!isMobileMoreOpen)}
-                className={navBarButtonStyles(
-                  mobileMoreLinks.some(link => activeSection === link.path)
-                )}
+                onClick={() => setShowModal(false)}
+                className="float-right text-gray-500 hover:text-gray-700 text-2xl"
               >
-                More
-                {/* Arrow icon that rotates when isMobileMoreOpen is true */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="2"
-                  stroke="currentColor"
-                  className={`inline-block ml-1 w-4 h-4 transition-transform duration-300 ${
-                    isMobileMoreOpen ? "rotate-180" : "rotate-0"
-                  }`}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
+                ×
               </button>
-              {isMobileMoreOpen && (
-                <ul className="mt-2 space-y-2 ml-4">
-                  {mobileMoreLinks.map((link) => (
-                    <li
-                      key={link.name}
-                      className={navBarButtonStyles(activeSection === link.path)}
-                      onClick={() => handleLinkClick(link.path)}
-                    >
-                      {link.name}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          )}
-        </ul>
-        <div className="mt-20 text-center flex items-center justify-center">
-          <button className={signupButtonStyles}>Sign Up</button>
-          <button className={loginButtonStyles + " ml-4"}>Login</button>
-        </div>
-      </div>
+              
+              <div className="text-center pt-8">
+                <div className="mb-6 animate-bounce">
+                  <svg
+                    className="w-16 h-16 mx-auto text-blue-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
+                    />
+                  </svg>
+                </div>
 
-      {/* Overlay with blur effect for mobile */}
-      {isMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-30"
-          onClick={toggleMenu}
-        ></div>
-      )}
-    </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                  Mobile App Coming Soon!
+                </h3>
+                
+                <p className="text-gray-600 mb-6">
+                  We're working hard to bring you the best mobile learning experience. 
+                  Be the first to know when we launch!
+                </p>
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email for updates"
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                  <button
+                    type="submit"
+                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Notify Me
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
   );
 };
 
-export default NavBar;
+export default MobileAppCTA;
