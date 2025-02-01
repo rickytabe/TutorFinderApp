@@ -50,8 +50,8 @@ const PricingTransparency = () => {
     const filteredPlans = plans.filter(plan => plan.type === activePricing);
   
     return (
-      <section className="py-16 bg-gray-900">
-        <div className="container mx-auto px-4">
+      <section className="py-16 bg-gray-900 ">
+        <div className="container mx-auto px-4 ">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Transparent Pricing
@@ -66,7 +66,7 @@ const PricingTransparency = () => {
             <div className="bg-gray-800 p-2 rounded-xl">
               <button 
                 onClick={() => setActivePricing('hourly')}
-                className={`px-6 py-3 rounded-lg transition-colors ${
+                className={`px-6 py-3 rounded-lg  transition-colors ${
                   activePricing === 'hourly' 
                     ? 'bg-blue-600 text-white' 
                     : 'text-gray-400 hover:text-white'
@@ -86,19 +86,20 @@ const PricingTransparency = () => {
               </button>
             </div>
           </div>
-  
-          <div className={`grid grid-cols-1 gap-8 ${
+
+          {/* Pricing Grid */}
+          <div className={`grid grid-cols-1 gap-8 place-items-center w-full ${
             activePricing === 'hourly' ? 'md:grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-3'
-          }`}>
+           }`}> 
             {filteredPlans.map((plan, index) => (
               <div 
                 key={index}
-                className={`relative bg-gray-800 rounded-2xl p-8 ${
+                className={`relative bg-gray-800 rounded-2xl p-8  w-full max-w-md mx-auto  ${
                   plan.recommended 
                     ? "border-2 border-blue-500" 
                     : "border border-gray-700"
                 }`}
-              >
+               >
                 {plan.recommended && (
                   <div className="absolute top-0 right-0 bg-blue-600 text-white px-4 py-1 rounded-bl-xl rounded-tr-xl text-sm">
                     Most Popular

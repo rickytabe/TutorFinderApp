@@ -14,6 +14,7 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
   // State variables
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const [isMobileMoreOpen, setIsMobileMoreOpen] = useState(false); // <-- For mobile sidebar "More" toggle
 
   // Handle body overflow when menu is open
   useEffect(() => {
@@ -24,7 +25,6 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
       document.body.style.overflow = "";
       document.body.style.touchAction = "";
     }
-
     return () => {
       document.body.style.overflow = "";
       document.body.style.touchAction = "";
@@ -37,7 +37,7 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
       isActive ? "text-blue-500" : "text-white hover:text-blue-600"
     }`;
   const underlineStyles = (isActive: boolean) =>
-    `absolute left-0 bottom-0 h-0.5 bg-white transition-all duration-300 ${
+    `absolute left-0 bottom-0 h-0.5 bg-blue-500 transition-all duration-300 ${
       isActive ? "w-full" : "w-0 group-hover:w-full"
     }`;
   const menuContainerStyles =
@@ -55,7 +55,7 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
       isActive ? "text-blue-500" : "text-black hover:text-white"
     }`;
 
-  // Navigation links
+  // All navigation links
   const allLinks: NavLink[] = [
     { name: "Home", path: "home" },
     { name: "Social Proof", path: "social-proof" },
@@ -71,18 +71,26 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
     { name: "Footer", path: "footer" }, // Added
   ];
 
+  // For desktop navigation: visible first 5 and "more" links
   const visibleLinks = allLinks.slice(0, 5);
   const moreLinks = allLinks.slice(5);
+
+  // For mobile sidebar: limit to 5 options then add a "More" option
+  const mobileVisibleLinks = allLinks.slice(0, 5);
+  const mobileMoreLinks = allLinks.slice(5);
 
   // Mobile menu toggle
   const toggleMenu = useCallback(() => {
     setIsMenuOpen((prev) => !prev);
   }, []);
 
-  // Handle link click
+  // Handle link click (both desktop and mobile)
   const handleLinkClick = (path: string) => {
     scrollToSection(path);
     setIsMenuOpen(false);
+    // Close any open "More" dropdowns
+    setIsMoreOpen(false);
+    setIsMobileMoreOpen(false);
   };
 
   return (
@@ -118,7 +126,7 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
                 </li>
               ))}
 
-              {/* More dropdown */}
+              {/* More dropdown for desktop */}
               {moreLinks.length > 0 && (
                 <li className="relative">
                   <button
@@ -127,6 +135,19 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
                     aria-label="Show more links"
                   >
                     More
+                    {/* Arrow icon that rotates when isMoreOpen is true */}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="2"
+                      stroke="currentColor"
+                      className={`inline-block ml-1 w-4 h-4 transition-transform duration-300 ${
+                        isMoreOpen ? "rotate-180" : "rotate-0"
+                      }`}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
                     <span
                       className={underlineStyles(moreLinks.some(link => activeSection === link.path))}
                       aria-hidden="true"
@@ -134,7 +155,7 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
                   </button>
 
                   {isMoreOpen && (
-                    <div className="absolute right-0 mt-2 w-48 rounded-lg shadow-lg bg-white/10 backdrop-blur-md border border-gray-200">
+                    <div className="absolute right-0 mt-2 w-48 rounded-lg shadow-lg bg-black/90 backdrop-blur-md border border-gray-200">
                       <ul className="py-2">
                         {moreLinks.map((link) => (
                           <li key={link.name}>
@@ -190,11 +211,7 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
               stroke="currentColor"
               className="w-6 h-6"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 6h16M4 12h16m-7 6h7"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
             </svg>
           </button>
         </div>
@@ -218,15 +235,12 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
             stroke="currentColor"
             className="w-6 h-6"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
-        <ul className="mt-16 space-y-4 text-black px-6 border-b border-gray-700 pb-4">
-          {allLinks.map((link) => (
+        {/* Added horizontal scrolling to the sidebar list */}
+        <ul className="mt-16 space-y-4 text-black px-6 border-b border-gray-700 pb-4 overflow-x-auto">
+          {mobileVisibleLinks.map((link) => (
             <li
               key={link.name}
               className={navBarButtonStyles(activeSection === link.path)}
@@ -235,6 +249,46 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
               {link.name}
             </li>
           ))}
+
+          {/* Mobile sidebar "More" option */}
+          {mobileMoreLinks.length > 0 && (
+            <li className="relative">
+              <button
+                onClick={() => setIsMobileMoreOpen(!isMobileMoreOpen)}
+                className={navBarButtonStyles(
+                  mobileMoreLinks.some(link => activeSection === link.path)
+                )}
+              >
+                More
+                {/* Arrow icon that rotates when isMobileMoreOpen is true */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2"
+                  stroke="currentColor"
+                  className={`inline-block ml-1 w-4 h-4 transition-transform duration-300 ${
+                    isMobileMoreOpen ? "rotate-180" : "rotate-0"
+                  }`}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {isMobileMoreOpen && (
+                <ul className="mt-2 space-y-2 ml-4">
+                  {mobileMoreLinks.map((link) => (
+                    <li
+                      key={link.name}
+                      className={navBarButtonStyles(activeSection === link.path)}
+                      onClick={() => handleLinkClick(link.path)}
+                    >
+                      {link.name}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          )}
         </ul>
         <div className="mt-20 text-center flex items-center justify-center">
           <button className={signupButtonStyles}>Sign Up</button>
@@ -242,7 +296,7 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
         </div>
       </div>
 
-      {/* Overlay with blur effect */}
+      {/* Overlay with blur effect for mobile */}
       {isMenuOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-30"

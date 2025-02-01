@@ -18,7 +18,7 @@ const SocialProof = () => {
   const achievements = [
     { number: "25K+", label: "Active Students" }, // Added active students
     { number: "10K+", label: "Hours Taught" },
-    { number: "4.9/5", label: "Average Rating" },
+    { number: "4.5/5", label: "Average Rating" },
     { number: "98%", label: "Success Rate" }
   ];
 
