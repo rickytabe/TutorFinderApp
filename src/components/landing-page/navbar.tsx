@@ -1,4 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
+import { Link } from "react-router-dom";
+
+
 
 interface NavLink {
   name: string;
@@ -184,18 +187,20 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
 
           {/* Auth Buttons */}
           <div className="hidden md:flex space-x-4">
-            <button
+            <Link
               className={signupButtonStyles}
               aria-label="Create a new account"
+              to='/auth/learner-registration'
             >
               Sign Up
-            </button>
-            <button
+            </Link>
+            <Link
               className={loginButtonStyles}
               aria-label="Login to your account"
+              to='/auth/learner-login'
             >
               Login
-            </button>
+            </Link>
           </div>
 
           {/* Mobile Menu icon */}
@@ -267,8 +272,8 @@ const NavBar: React.FC<NavBarProps> = ({ scrollToSection, activeSection }) => {
           ))}
         </ul>
         <div className="mt-20 text-center flex items-center justify-center">
-          <button className={signupButtonStyles}>Sign Up</button>
-          <button className={loginButtonStyles + " ml-4"}>Login</button>
+          <Link to='/auth/learner-registration' className={signupButtonStyles}>Sign Up</Link>
+          <Link to='/auth/learner-login' className={loginButtonStyles + " ml-4"}>Login</Link>
         </div>
       </div>
 

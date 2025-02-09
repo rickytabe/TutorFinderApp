@@ -13,6 +13,10 @@ export default {
           "100%": { backgroundPosition: "0% 50%" },
         },
       },
+      spacing: {
+        '128': '32rem',
+        '144': '36rem',
+      },
       colors: {
         primary: "#4CAF50", // Green
         secondary: "#2196F3", // Blue
