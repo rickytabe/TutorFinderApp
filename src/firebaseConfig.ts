@@ -1,15 +1,15 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
-const firebaseConfig = {
-    apiKey: "AIzaSyDC8IRLAhmS2VrC71MYqKRoNhVkvn0hUDg",
-    authDomain: "tutor-finder-backend.firebaseapp.com",
-    projectId: "tutor-finder-backend",
-    storageBucket: "tutor-finder-backend.firebasestorage.app",
-    messagingSenderId: "986271918341",
-    appId: "1:986271918341:web:5a71986172dab87ca6ef6c",
-    measurementId: "G-EP3WJ5QEXR"
-};
+export const firebaseConfig = {
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+  };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);

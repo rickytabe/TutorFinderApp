@@ -3,7 +3,7 @@ import { browserPopupRedirectResolver, createUserWithEmailAndPassword, signInWit
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth ,db} from './firebaseConfig';
 import { User, Learner, Tutor } from "../types/users";
-import { OAuthProvider, signInWithPopup,GoogleAuthProvider } from 'firebase/auth';
+import { OAuthProvider, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
 
 export const createUser = async (email: string, password: string) => {

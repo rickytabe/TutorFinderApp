@@ -69,6 +69,7 @@ export const TutorLogin = () => {
     >
       <form onSubmit={handleSubmit} className="mt-8 space-y-6">
         {/* Email Input */}
+        <p className="my-1 text-sm text-red-600">{formError}</p>
         <div>
           <label className="block text-sm font-medium text-gray-700">Email</label>
           <input

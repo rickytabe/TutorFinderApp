@@ -30,10 +30,10 @@ const AuthWrapper = ({
     "Expand Your Knowledge",
   ];
 
-  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const [_currentTextIndex, setCurrentTextIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState("");
   const [textColor, setTextColor] = useState("text-teal-200");
-  const [isTyping, setIsTyping] = useState(true);
+  const [_isTyping, setIsTyping] = useState(true);
 
   useEffect(() => {
     const texts = isTutor ? tutorTexts : learnerTexts;

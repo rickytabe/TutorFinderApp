@@ -19,9 +19,10 @@ interface TutorInfo {
 const mockEarningsData = [
   { month: 'Jan', earnings: 4000 },
   { month: 'Feb', earnings: 3000 },
-//   { month: 'Mar', earnings: 5000 },
-//   { month: 'Apr', earnings: 4500 },
-//   { month: 'May', earnings: 6000 },
+  { month: 'Mar', earnings: 5000 },
+  { month: 'Apr', earnings: 4500 },
+  { month: 'May', earnings: 6000 },
+  { month: ''}
 ];
 
 const TutorHomePage: React.FC = () => {
@@ -102,7 +103,7 @@ const TutorHomePage: React.FC = () => {
               </svg>
             </button>
             <div className="flex-shrink-0">
-              <span className="inline-block h-8 w-8 rounded-full bg-blue-500 text-white flex items-center justify-center">
+              <span className="h-8 w-8 rounded-full bg-blue-500 text-white flex items-center justify-center">
                 {tutorInfo.firstName[0]}
               </span>
             </div>

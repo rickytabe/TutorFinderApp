@@ -49,6 +49,7 @@ const LearnerHomePage: React.FC = () => {
   }
 
   if (error) {
+    setError('Failed to load learner information');
     return (
       <div className="flex justify-center items-center h-screen bg-gradient-to-r from-blue-50 to-purple-50">
         <div className="text-red-500 text-xl">{error}</div>

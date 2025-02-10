@@ -13,7 +13,7 @@ export interface User {
 
 export interface Learner extends User {
   subjectsOfInterest: string[];
-  preferredLearningStyle: string;
+  preferredLearningStyle: string; 
   availability: string[]; // e.g., ['Weekdays', 'Weekends']
   location?: string;
 }
