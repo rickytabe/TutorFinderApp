@@ -11,8 +11,7 @@ const SocialAuthButtons = () => {
     } catch (error) {
       console.error('Google Sign-In error:', error);
     }
-  };
-
+  }
   const handleAppleSignIn = async () => {
     try {
       const user = await signInWithApple();
