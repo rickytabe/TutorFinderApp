@@ -1,11 +1,16 @@
 // src/pages/LearnerHomePage.tsx
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../../Auth/shared/firebaseAuthUtils';
-import { Learner } from '../../../types/users';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser, setLoading } from '../../../store/reducers/AuthSlice';
+import { auth } from '../../../firebase/firebaseConfig';
+import { Link } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import { Learner } from '../../../types/users';
+import { getUserDoc } from '../../../firebase/firebaseServices';
+import store, { AppDispatch, RootState } from '../../../store/store';
+import { persistStore } from 'redux-persist';
 
 const mockLearningData = [
   { date: 'Mon', hours: 3 },
@@ -18,29 +23,62 @@ const mockLearningData = [
 ];
 
 const LearnerHomePage: React.FC = () => {
-  const { currentUser, authLoading } = useAuth();
+  const dispatch = useDispatch<AppDispatch>();
+  const { user, loading } = useSelector((state: RootState) => state.auth);
   const [learnerInfo, setLearnerInfo] = useState<Learner | null>(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
- 
+  const [isRehydrated, setIsRehydrated] = useState(false);
+
+  // Fetch learner info
   useEffect(() => {
-    if (authLoading) return;
+    const fetchLearnerInfo = async () => {
+      try {
+        setError(null);
+        if (!user?.uid) {
+          setLearnerInfo(null);
+          return;
+        }
 
-    if (!currentUser) {
-      navigate('/auth/learner-login');
-      return;
-    }
+        const info = await getUserDoc(user.uid);
+        if (!info) throw new Error('Learner profile not found');
 
-    if (currentUser.userType === 'learner') {
-      setLearnerInfo(currentUser as Learner);
-      setLoading(false);
-    } else {
-      navigate('/');
-    }
-  }, [currentUser, authLoading, navigate]);
+        const learnerData = info as Learner;
+        setLearnerInfo(learnerData);
+      } catch (error) {
+        console.error('Error fetching learner info:', error);
+        setError(error instanceof Error ? error.message : 'Failed to load learner information');
+        setLearnerInfo(null);
+      }
+    };
 
-  if (authLoading || loading) {
+    fetchLearnerInfo();
+  }, [user]);
+
+  // Auth state persistence
+  useEffect(() => {
+    const unsubscribeAuth = auth.onAuthStateChanged((firebaseUser) => {
+      if (firebaseUser) {
+        const serializableUser = {
+          uid: firebaseUser.uid,
+          email: firebaseUser.email,
+          displayName: firebaseUser.displayName,
+        };
+        dispatch(setUser(serializableUser));
+      } 
+      dispatch(setLoading(false));
+    });
+
+    const unsubscribePersist = persistStore(store).subscribe(() => {
+      setIsRehydrated(true);
+    });
+
+    return () => {
+      unsubscribeAuth();
+      unsubscribePersist();
+    };
+  }, [dispatch]);
+
+  if (!isRehydrated || loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-gradient-to-r from-blue-50 to-purple-50">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-600"></div>
@@ -48,8 +86,23 @@ const LearnerHomePage: React.FC = () => {
     );
   }
 
+  if (!user) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gradient-to-r from-blue-50 to-purple-50">
+        <div className="text-center">
+          <div className="text-red-500 text-xl mb-4">You are not signed in yet.</div>
+          <Link
+            to="/auth/learner-login"
+            className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+          >
+            Go to Learner Sign In
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   if (error) {
-    setError('Failed to load learner information');
     return (
       <div className="flex justify-center items-center h-screen bg-gradient-to-r from-blue-50 to-purple-50">
         <div className="text-red-500 text-xl">{error}</div>
