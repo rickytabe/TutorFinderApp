@@ -1,9 +1,14 @@
+// src/pages/TutorHomePage.tsx
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../../Auth/shared/firebaseAuthUtils';
-import { User } from '../../../types/users';
-import { getUserDoc } from '../../../firebase/firebaseServices';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser, setLoading } from '../../../store/reducers/AuthSlice';
+import { auth } from '../../../firebase/firebaseConfig';
+import { Link } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { getUserDoc } from '../../../firebase/firebaseServices';
+import persistStore from 'redux-persist/lib/persistStore';
+import store, { AppDispatch, RootState } from '../../../store/store';
+
 
 interface TutorInfo {
   firstName: string;
@@ -15,55 +20,75 @@ interface TutorInfo {
   hourlyRate: string;
 }
 
-// Mock data for the chart
 const mockEarningsData = [
   { month: 'Jan', earnings: 4000 },
   { month: 'Feb', earnings: 3000 },
   { month: 'Mar', earnings: 5000 },
   { month: 'Apr', earnings: 4500 },
   { month: 'May', earnings: 6000 },
-  { month: ''}
+  { month: 'June', earnings: 1000 },
+  { month: 'Jully', earnings: 4000 },
+  { month: 'Aug', earnings: 3000 },
+  { month: 'Sept', earnings: 5000 },
+  { month: 'Oct', earnings: 4500 },
+  { month: 'Nov', earnings: 6000 },
+  { month: 'Dec', earnings: 1000 },
 ];
 
 const TutorHomePage: React.FC = () => {
-    const { currentUser, authLoading } = useAuth() as { 
-        currentUser: User | null;
-        authLoading: boolean;  // Add auth loading state from your auth hook
-      };
+  const dispatch = useDispatch<AppDispatch>();
+  const { user, loading } = useSelector((state: RootState) => state.auth);
   const [tutorInfo, setTutorInfo] = useState<TutorInfo | null>(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const [isRehydrated, setIsRehydrated] = useState(false);
 
   useEffect(() => {
     const fetchTutorInfo = async () => {
       try {
-       // Wait for auth to initialize
-       if (authLoading) return;
-
-       if (!currentUser) {
-         navigate('/auth/tutor-login');
-         return;
-       }
-
-        const info = await getUserDoc(currentUser.uid);
-        if (info) {
-          const { firstName, lastName, email, qualifications, experience, subjects, hourlyRate } = info as unknown as TutorInfo;
-          setTutorInfo({ firstName, lastName, email, qualifications, experience, subjects, hourlyRate });
+        if (!user) return;
+        // Use double casting to convert to TutorInfo
+        const info = (await getUserDoc(user.uid)) as unknown as TutorInfo;
+        if (!info) {
+          throw new Error('Tutor information not found');
         }
+        setTutorInfo(info);
       } catch (error) {
-        console.error("Error fetching tutor info:", error);
+        console.error('Error fetching tutor info:', error);
         setError('Failed to load tutor information');
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchTutorInfo();
-  }, [currentUser, navigate, authLoading]);
+  }, [user]);
 
-  // Show loading spinner while checking auth state
-  if (authLoading || loading) {
+  useEffect(() => {
+    const unsubscribeAuth = auth.onAuthStateChanged((firebaseUser) => {
+      try {
+        if (firebaseUser) {
+          const serializableUser = {
+            uid: firebaseUser.uid,
+            email: firebaseUser.email,
+            displayName: firebaseUser.displayName,
+          };
+          dispatch(setUser(serializableUser));
+        } 
+        dispatch(setLoading(false));
+      } catch (error) {
+        console.error('Error in auth state change:', error);
+      }
+    });
+
+    const unsubscribePersist = persistStore(store).subscribe(() => {
+      setIsRehydrated(true);
+    });
+
+    return () => {
+      unsubscribeAuth();
+      unsubscribePersist();
+    };
+  }, [dispatch]);
+
+  if (!isRehydrated || loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-50">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
@@ -71,10 +96,34 @@ const TutorHomePage: React.FC = () => {
     );
   }
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-50">
+        <div className="text-center">
+          <div className="text-red-500 text-xl mb-4">You are not signed in yet.</div>
+          <Link
+            to="/auth/tutor-login"
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+          >
+            Go to Tutor Sign In
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   if (error) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-50">
-        <div className="text-red-500 text-xl">{error}</div>
+        <div className="text-green-500 text-xl">{error}</div>
       </div>
     );
   }
@@ -82,14 +131,13 @@ const TutorHomePage: React.FC = () => {
   if (!tutorInfo) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-50">
-        <div className="text-red-500"></div>
+        <div className="text-red-500">No tutor information found.</div>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Dashboard Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <h1 className="text-2xl font-semibold text-gray-900">
@@ -99,7 +147,12 @@ const TutorHomePage: React.FC = () => {
             <button className="p-2 text-gray-400 hover:text-gray-500">
               <span className="sr-only">Notifications</span>
               <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                />
               </svg>
             </button>
             <div className="flex-shrink-0">
@@ -142,7 +195,7 @@ const TutorHomePage: React.FC = () => {
             <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
               <h2 className="text-lg font-semibold text-gray-800 mb-4">Professional Details</h2>
               <InfoItem label="Hourly Rate" value={`$${tutorInfo.hourlyRate}/hr`} />
-              <InfoItem label="Experience" value={`${tutorInfo.experience} years`} />
+              <InfoItem label="Experience" value={`${tutorInfo.experience || 'Not specified'} years`} />
               <InfoItem label="Qualifications" value={tutorInfo.qualifications} />
             </div>
           </div>
@@ -157,10 +210,10 @@ const TutorHomePage: React.FC = () => {
                     <XAxis dataKey="month" />
                     <YAxis />
                     <Tooltip />
-                    <Line 
-                      type="monotone" 
-                      dataKey="earnings" 
-                      stroke="#3B82F6" 
+                    <Line
+                      type="monotone"
+                      dataKey="earnings"
+                      stroke="#3B82F6"
                       strokeWidth={2}
                       dot={{ fill: '#3B82F6' }}
                     />
@@ -173,7 +226,7 @@ const TutorHomePage: React.FC = () => {
               <h2 className="text-lg font-semibold text-gray-800 mb-4">Teaching Subjects</h2>
               <div className="flex flex-wrap gap-2">
                 {tutorInfo.subjects.split(',').map((subject, index) => (
-                  <span 
+                  <span
                     key={index}
                     className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
                   >

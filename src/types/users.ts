@@ -29,3 +29,9 @@ export interface Tutor extends User {
   teachingPhilosophy?: string;
   references?: string;
 }
+
+export type SerializableUser = {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+};
